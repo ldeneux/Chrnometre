@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 import { Play, Square, RotateCcw, Download, Trash2, Swimming, Timer, Award, CheckCircle2 } from "lucide-react";
 
 export default function ChronoApp() {
-  const [swimmer, setSwimmer] = useState("Emma");
+  const [swimmer, setSwimmer] = useState("Amandine");
   const [stroke, setStroke] = useState("Nage Libre");
   const [distance, setDistance] = useState(50);
   const [pool, setPool] = useState(25);

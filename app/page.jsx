@@ -17,6 +17,14 @@ export default function ChronoApp() {
   
   const timerRef = useRef(null);
   const startTimeRef = useRef(0);
+  const [showLogoFull, setShowLogoFull] = useState(false);
+  const lastLogoTapRef = useRef(0);
+  useEffect(() => {
+    if (!showLogoFull) return;
+    const onKey = (e) => { if (e.key === "Escape") setShowLogoFull(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showLogoFull]);
 
   const totalClicks = Math.ceil(distance / pool);
   const currentClick = laps.length;
@@ -151,6 +159,12 @@ export default function ChronoApp() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col max-w-md mx-auto border-x border-slate-800 shadow-2xl">
+      {showLogoFull && (
+        <div onClick={() => setShowLogoFull(false)} className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 cursor-zoom-out">
+          <img src="/app_icon_full.png" alt="Logo Chrono Natation" className="max-w-full max-h-full object-contain" />
+          <button onClick={() => setShowLogoFull(false)} aria-label="Fermer" className="absolute top-3 right-3 w-10 h-10 rounded-full bg-slate-800/90 text-white text-lg font-bold border border-slate-600">✕</button>
+        </div>
+      )}
       {/* Header Updated with New Logo */}
       <header className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center sticky top-0 z-10">
         <div className="flex items-center gap-3">
@@ -158,7 +172,14 @@ export default function ChronoApp() {
           <img 
             src="/app_icon.png" 
             alt="Logo Chrono Natation" 
-            className="w-[96px] h-[96px] rounded-xl object-contain"
+            title="Double-clic pour agrandir"
+            onClick={() => {
+              const now = Date.now();
+              if (now - lastLogoTapRef.current < 400) { setShowLogoFull(true); lastLogoTapRef.current = 0; }
+              else lastLogoTapRef.current = now;
+            }}
+            style={{ touchAction: "manipulation" }}
+            className="w-[96px] h-[96px] rounded-xl object-contain cursor-zoom-in select-none"
           />
           <div>
             <h1 className="font-bold text-lg leading-tight text-sky-400">Chrono Natation</h1>
